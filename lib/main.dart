@@ -1,4 +1,5 @@
 import 'package:animations/cool_login/login_screen.dart';
+import 'package:animations/motion_restaurant/main_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: MainScreen(),
     );
   }
 }

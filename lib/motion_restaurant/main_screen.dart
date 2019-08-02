@@ -1,5 +1,6 @@
-import 'package:animations/motion_restaurant/menu_screen.dart';
-import 'package:animations/motion_restaurant/screens/selection_screen.dart';
+import 'package:animations/motion_restaurant/screens/categories/selection_screen.dart';
+import 'package:animations/motion_restaurant/screens/menu/menu_screen.dart';
+import 'package:animations/motion_restaurant/utils.dart';
 import 'package:flutter/material.dart';
 
 const mainColor = Color(0xfff23e54);
@@ -11,36 +12,20 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-  final dummyItems = [
-    FoodItem("Pizza", 25),
-    FoodItem("Salads", 30),
-    FoodItem("Desserts", 30),
-    FoodItem("Pasta", 44),
-    FoodItem("Beverages", 30),
-  ];
-
   AnimationController _animationController;
+  PageController _pageController = PageController();
   var _currentView = 0;
   List<Widget> views = [];
+  final int _fullViewAnimDuration = 1;
+  int get _stepAnimDuration => ((_fullViewAnimDuration / 3) * 1000).toInt();
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
-    views.addAll([
-      SelectionScreen(
-        onFoodTap: (_) {
-          setState(() {
-            _currentView = 1;
-            _advanceAnim();
-          });
-        },
-        dummyItems: dummyItems,
-      ),
-      MenuScreen(),
-      Container()
-    ]);
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(seconds: _fullViewAnimDuration));
+    _setupViews();
+    _advanceAnim();
   }
 
   @override
@@ -54,27 +39,31 @@ class _MainScreenState extends State<MainScreen>
               animation: animationForProgressBackground(),
             ),
             Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: views[_currentView]),
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: PageView(
+                controller: _pageController,
+                physics: NeverScrollableScrollPhysics(),
+                children: views,
+              ),
+            ),
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: AppBar(
+                actions: <Widget>[
+                  AnimatedOpacity(
+                      opacity: _currentView > 0 ? 1 : 0,
+                      duration: Duration(milliseconds: _stepAnimDuration),
+                      child: _ShoppingCartIcon()),
+                ],
                 leading: IconButton(
                   icon: Icon(_currentView == 0 ? Icons.menu : Icons.arrow_back),
                   color: Colors.white,
-                  onPressed: () {
-                    if (_currentView > 0) {
-                      setState(() {
-                        _currentView--;
-                        _advanceAnim();
-                      });
-                    }
-                  },
+                  onPressed: _onBackPressed,
                 ),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -96,10 +85,57 @@ class _MainScreenState extends State<MainScreen>
     return anim;
   }
 
+  void _onBackPressed() {
+    if (_currentView > 0) {
+      setState(() {
+        _currentView--;
+        _gotoPage(_currentView);
+        _advanceAnim();
+      });
+    }
+  }
+
   void _advanceAnim() {
-    double target = (_currentView + 1)/ views.length;
-    print('Target: $target');
+    double target = (_currentView + 1) / views.length;
     _animationController.animateTo(target);
+  }
+
+  void _gotoPage(int page) {
+    _pageController.animateToPage(page,
+        duration: Duration(
+            milliseconds: _stepAnimDuration),
+        curve: Curves.easeInOut);
+  }
+
+  void _setupViews() {
+    views.addAll([
+      SelectionScreen(
+        onFoodTap: (_) {
+          setState(() {
+            _currentView = 1;
+            _gotoPage(_currentView);
+            _advanceAnim();
+          });
+        },
+        dummyItems: dummyItems,
+      ),
+      MenuScreen(),
+      Container()
+    ]);
+  }
+}
+
+class _ShoppingCartIcon extends StatelessWidget {
+  const _ShoppingCartIcon({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.shopping_basket, color: Colors.grey),
+      onPressed: () => print('Go to shopping cart'),
+    );
   }
 }
 

@@ -2,8 +2,9 @@ import 'package:animations/motion_restaurant/animated_item.dart';
 import 'package:animations/motion_restaurant/category_item.dart';
 import 'package:animations/motion_restaurant/clippers/plate_curve_clipper.dart';
 import 'package:animations/motion_restaurant/clippers/triangle_curve_clipper.dart';
-import 'package:animations/motion_restaurant/menu_screen.dart';
-import 'package:animations/motion_restaurant/transitions/slide_left_transition.dart';
+import 'package:animations/motion_restaurant/main_screen.dart';
+import 'package:animations/motion_restaurant/screens/categories/category_item_widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class FoodItem {
@@ -14,7 +15,6 @@ class FoodItem {
 }
 
 class SelectionScreen extends StatelessWidget {
-
   final ValueChanged<FoodItem> onFoodTap;
 
   const SelectionScreen({
@@ -38,8 +38,19 @@ class SelectionScreen extends StatelessWidget {
         return AnimatedItem(
           onTap: () => onFoodTap(dummyItems[index]),
           child: CategoryItem(
-            dishClipper: clipper,
-            foodItem: dummyItems[index],
+            left: Plate(
+              dishClipper: clipper,
+            ),
+            center: Info(
+              foodItem: dummyItems[index],
+            ),
+            right: CircleButton(
+              onPressed: () => print('Do Something'),
+              child: Icon(
+                Icons.chevron_right,
+                color: mainColor,
+              ),
+            ),
           ),
         );
       },

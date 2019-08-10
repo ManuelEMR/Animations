@@ -16,19 +16,34 @@ class MenuItem {
   const MenuItem(this.title, this.description, this.rating, this.weigth, this.price);
 }
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
+
+  @override
+  _MenuScreenState createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+
+  var _expandedRows = Set();
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 30),
       itemBuilder: (context, index) {
         if (index == 0) return _Title();
+        print("Rebuild");
         return CategoryItem(
+          centerHeight: 157,
+          rightHeight: kCircleButtonSize,
+          leftHeight: 110,
           left: Plate(
             size: 110,
             dishClipper: PlateCurveClipper(),
           ),
-          center: PlateInfo(menuItem: dummyMenuItems[index - 1],),
+          center: PlateInfo(
+            onExpand: (val) => _didBodyExpand(index, val),
+            menuItem: dummyMenuItems[index - 1],),
           right: CircleButton(
             onPressed: () => print('Do something else'),
             child: Icon(
@@ -44,6 +59,15 @@ class MenuScreen extends StatelessWidget {
       },
       itemCount: dummyMenuItems.length + 1,
     );
+  }
+
+  void _didBodyExpand(int index, bool expanded) {
+
+print("Did body change");
+    setState(() {
+      if (expanded) _expandedRows.add(index);
+      else _expandedRows.remove(index);
+    });
   }
 }
 

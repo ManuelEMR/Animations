@@ -38,16 +38,10 @@ class _MainScreenState extends State<MainScreen>
             _ProgressBackground(
               animation: animationForProgressBackground(),
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: PageView(
-                controller: _pageController,
-                physics: NeverScrollableScrollPhysics(),
-                children: views,
-              ),
+            PageView(
+              controller: _pageController,
+              physics: NeverScrollableScrollPhysics(),
+              children: views,
             ),
             Positioned(
               top: 0,
@@ -102,8 +96,7 @@ class _MainScreenState extends State<MainScreen>
 
   void _gotoPage(int page) {
     _pageController.animateToPage(page,
-        duration: Duration(
-            milliseconds: _stepAnimDuration),
+        duration: Duration(milliseconds: _stepAnimDuration),
         curve: Curves.easeInOut);
   }
 

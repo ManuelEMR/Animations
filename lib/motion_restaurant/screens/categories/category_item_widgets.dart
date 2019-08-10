@@ -1,6 +1,8 @@
 import 'package:animations/motion_restaurant/screens/categories/selection_screen.dart';
 import 'package:flutter/material.dart';
 
+const double kDefaultPlateSize = 85;
+
 class Plate extends StatelessWidget {
   final CustomClipper<Path> dishClipper;
   final double size;
@@ -8,7 +10,7 @@ class Plate extends StatelessWidget {
 
   const Plate(
       {Key key,
-      this.size = 85,
+      this.size = kDefaultPlateSize,
       @required this.dishClipper,
       this.icon = Icons.fastfood})
       : super(key: key);
@@ -30,6 +32,8 @@ class Plate extends StatelessWidget {
   }
 }
 
+const double kCircleButtonSize = 35;
+
 class CircleButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Widget child;
@@ -40,8 +44,8 @@ class CircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 35,
-      width: 35,
+      height: kCircleButtonSize,
+      width: kCircleButtonSize,
       child: RawMaterialButton(
         onPressed: onPressed,
         elevation: 10,
@@ -53,6 +57,8 @@ class CircleButton extends StatelessWidget {
   }
 }
 
+const double kInfoHeight = 100;
+
 class Info extends StatelessWidget {
   final FoodItem foodItem;
 
@@ -62,7 +68,7 @@ class Info extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
-      height: 100,
+      height: kInfoHeight,
       padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 70),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

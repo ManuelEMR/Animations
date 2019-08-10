@@ -4,52 +4,73 @@ import 'package:flutter/material.dart';
 
 class PlateInfo extends StatefulWidget {
   final MenuItem menuItem;
+  final ValueChanged<bool> onExpand;
 
-  const PlateInfo({Key key, @required this.menuItem}) : super(key: key);
+  const PlateInfo({Key key, @required this.onExpand, @required this.menuItem})
+      : super(key: key);
 
   @override
   _PlateInfoState createState() => _PlateInfoState();
 }
 
-class _PlateInfoState extends State<PlateInfo> {
-  var _showDescription = false;
+class _PlateInfoState extends State<PlateInfo>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _showAnim;
   final _contentKey = GlobalKey();
+
+  bool get _expanded => _animationController.value == 1;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(_layout);
+
+    _setupAnimation();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() => _showDescription = !_showDescription),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeIn,
+      onTap: _showDescription,
+      child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         padding: const EdgeInsets.fromLTRB(90, 25, 30, 25),
         child: Column(
           key: _contentKey,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            SizeTransition(
+              axis: Axis.vertical,
+              sizeFactor: _showAnim,
+              child: SizedBox(height: 16),
+            ),
             Text(
               widget.menuItem.title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            const SizedBox(
-              height: 8,
+            const SizedBox(height: 12),
+            SizeTransition(
+              sizeFactor: _showAnim,
+              child: FadeTransition(
+                opacity: _showAnim,
+                child: _LargeDescription(description: widget.menuItem.description),
+              ),
             ),
-            Visibility(
-              visible: _showDescription,
-              child:
-                  _LargeDescription(description: widget.menuItem.description),
+            SizeTransition(
+              axis: Axis.vertical,
+              sizeFactor: _showAnim,
+              child: SizedBox(
+                height: 12,
+              ),
             ),
             _Rating(rating: widget.menuItem.rating, totalStars: 5),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -72,9 +93,21 @@ class _PlateInfoState extends State<PlateInfo> {
     );
   }
 
-  void _layout(_) {
-    final RenderBox renderBox = _contentKey.currentContext.findRenderObject();
-    print('Size: ${renderBox.size}');
+  void _setupAnimation() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    final curvedAnimation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+    _showAnim = Tween(begin: 0.0, end: 1.0).animate(curvedAnimation);
+
+    _animationController.addListener(() => setState(() => {}));
+  }
+
+  void _showDescription() {
+    _expanded ? _animationController.reverse() : _animationController.forward();
+
+    // We need to send next expanded state.
+    widget.onExpand(!_expanded);
   }
 }
 

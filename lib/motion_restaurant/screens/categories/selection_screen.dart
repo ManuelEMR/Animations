@@ -38,6 +38,9 @@ class SelectionScreen extends StatelessWidget {
         return AnimatedItem(
           onTap: () => onFoodTap(dummyItems[index]),
           child: CategoryItem(
+            centerHeight: kInfoHeight,
+            rightHeight: kCircleButtonSize,
+            leftHeight: kDefaultPlateSize,
             left: Plate(
               dishClipper: clipper,
             ),

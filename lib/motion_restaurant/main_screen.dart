@@ -1,3 +1,4 @@
+import 'package:animations/motion_restaurant/screens/cart/cart_screen.dart';
 import 'package:animations/motion_restaurant/screens/categories/selection_screen.dart';
 import 'package:animations/motion_restaurant/screens/menu/menu_screen.dart';
 import 'package:animations/motion_restaurant/utils.dart';
@@ -112,8 +113,16 @@ class _MainScreenState extends State<MainScreen>
         },
         dummyItems: dummyItems,
       ),
-      MenuScreen(),
-      Container()
+      MenuScreen(
+        onAddTapped: () {
+          setState(() {
+            _currentView = 2;
+            _gotoPage(_currentView);
+            _advanceAnim();
+          });
+        },
+      ),
+      CartScreen()
     ]);
   }
 }

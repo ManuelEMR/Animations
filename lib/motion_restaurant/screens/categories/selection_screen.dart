@@ -1,5 +1,6 @@
 import 'package:animations/motion_restaurant/animated_item.dart';
 import 'package:animations/motion_restaurant/category_item.dart';
+import 'package:animations/motion_restaurant/circle_button.dart';
 import 'package:animations/motion_restaurant/clippers/plate_curve_clipper.dart';
 import 'package:animations/motion_restaurant/clippers/triangle_curve_clipper.dart';
 import 'package:animations/motion_restaurant/main_screen.dart';
@@ -35,8 +36,8 @@ class SelectionScreen extends StatelessWidget {
       itemBuilder: (_, index) {
         final clipper =
             index % 2 == 0 ? TriangleCurveClipper() : PlateCurveClipper();
-        return AnimatedItem(
-          onTap: () => onFoodTap(dummyItems[index]),
+        return ScaleTapAnim(
+          onTapUp: () => onFoodTap(dummyItems[index]),
           child: CategoryItem(
             centerHeight: kInfoHeight,
             rightHeight: kCircleButtonSize,
@@ -47,12 +48,9 @@ class SelectionScreen extends StatelessWidget {
             center: Info(
               foodItem: dummyItems[index],
             ),
-            right: CircleButton(
+            right: IconCircleButton(
               onPressed: () => print('Do Something'),
-              child: Icon(
-                Icons.chevron_right,
-                color: mainColor,
-              ),
+              icon: Icons.chevron_right,
             ),
           ),
         );

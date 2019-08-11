@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
-class AnimatedItem extends StatefulWidget {
+class ScaleTapAnim extends StatefulWidget {
   final Widget child;
-  final VoidCallback onTap;
+  final VoidCallback onTapUp;
+  final VoidCallback onTapDown;
 
-  AnimatedItem({this.onTap, @required this.child});
+  ScaleTapAnim({this.onTapDown, this.onTapUp, @required this.child});
 
   @override
-  _AnimatedItemState createState() => _AnimatedItemState();
+  _ScaleTapAnimState createState() => _ScaleTapAnimState();
 }
 
-class _AnimatedItemState extends State<AnimatedItem>
+class _ScaleTapAnimState extends State<ScaleTapAnim>
     with SingleTickerProviderStateMixin {
   AnimationController animationController;
   Animation<double> animation;
+  TickerFuture _animationFuture;
 
   @override
   void initState() {
@@ -39,14 +41,17 @@ class _AnimatedItemState extends State<AnimatedItem>
       scale: animation.value,
       child: GestureDetector(
         onTapDown: (details) {
-          animationController.forward().then((a) {
-            if (mounted)
-              return animationController.reverse();
-            else
-              return null;
-          }).then((_) {
-            if (mounted) widget.onTap();
-          });
+          _animationFuture = animationController.forward();
+          if (widget.onTapDown != null ) widget.onTapDown();
+        },
+        onTapUp: (details) {
+          if (mounted) {
+            _animationFuture?.then((_) =>
+                animationController.reverse()
+            )?.then((_) {
+              if (mounted) widget.onTapUp();
+            });
+          }
         },
         child: widget.child,
       ),

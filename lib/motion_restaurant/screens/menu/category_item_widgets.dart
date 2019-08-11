@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 
 class PlateInfo extends StatefulWidget {
   final MenuItem menuItem;
-  final ValueChanged<bool> onExpand;
 
-  const PlateInfo({Key key, @required this.onExpand, @required this.menuItem})
+  const PlateInfo({Key key, @required this.menuItem})
       : super(key: key);
 
   @override
@@ -105,9 +104,6 @@ class _PlateInfoState extends State<PlateInfo>
 
   void _showDescription() {
     _expanded ? _animationController.reverse() : _animationController.forward();
-
-    // We need to send next expanded state.
-    widget.onExpand(!_expanded);
   }
 }
 

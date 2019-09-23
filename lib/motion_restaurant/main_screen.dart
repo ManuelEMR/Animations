@@ -6,6 +6,13 @@ import 'package:flutter/material.dart';
 
 const mainColor = Color(0xfff23e54);
 
+class MainCartScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MainScreen();
+  }
+}
+
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -50,10 +57,12 @@ class _MainScreenState extends State<MainScreen>
               right: 0,
               child: AppBar(
                 actions: <Widget>[
-                  AnimatedOpacity(
-                      opacity: _currentView > 0 ? 1 : 0,
-                      duration: Duration(milliseconds: _stepAnimDuration),
-                      child: _ShoppingCartIcon()),
+                  _ShoppingCartIcon(
+                    showCartIcon: _currentView > 0,
+                    showCartItemsCount: _currentView == 2,
+                    cartItemCount: dummyCartItems.length.toString(),
+                    animDuration: _stepAnimDuration,
+                  ),
                 ],
                 leading: IconButton(
                   icon: Icon(_currentView == 0 ? Icons.menu : Icons.arrow_back),
@@ -127,16 +136,90 @@ class _MainScreenState extends State<MainScreen>
   }
 }
 
-class _ShoppingCartIcon extends StatelessWidget {
-  const _ShoppingCartIcon({
-    Key key,
-  }) : super(key: key);
+class _ShoppingCartIcon extends StatefulWidget {
+  final bool showCartItemsCount;
+  final String cartItemCount;
+  final bool showCartIcon;
+  final int animDuration;
+
+  const _ShoppingCartIcon(
+      {Key key,
+      @required this.showCartItemsCount,
+      @required this.cartItemCount,
+      @required this.showCartIcon,
+      @required this.animDuration})
+      : super(key: key);
+
+  @override
+  __ShoppingCartIconState createState() => __ShoppingCartIconState();
+}
+
+class __ShoppingCartIconState extends State<_ShoppingCartIcon>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation _colorTween;
+  Animation _iconColorTween;
+  Animation _itemCountColorTween;
+  Animation _sizeTween;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _colorTween = ColorTween(begin: mainColor, end: Colors.white)
+        .animate(_animationController);
+    _iconColorTween = ColorTween(begin: Colors.grey, end: Colors.white)
+        .animate(_animationController);
+    _itemCountColorTween = ColorTween(begin: Colors.white, end: mainColor)
+        .animate(_animationController);
+    _sizeTween = Tween<double>(begin: 0, end: 1).animate(_animationController);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.shopping_basket, color: Colors.grey),
-      onPressed: () => print('Go to shopping cart'),
+    if (widget.showCartItemsCount) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+
+    return AnimatedOpacity(
+      opacity: widget.showCartIcon ? 1 : 0,
+      duration: Duration(milliseconds: widget.animDuration),
+      child: AnimatedBuilder(
+        animation: _colorTween,
+        builder: (_, __) {
+          return Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.shopping_basket,
+                    color:
+                        widget.showCartItemsCount ? _iconColorTween.value : Colors.grey),
+                onPressed: () => print('Go to shopping cart'),
+              ),
+              Positioned(
+                right: 7,
+                top: 7,
+                child: Transform.scale(
+                  scale: _sizeTween.value,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: _colorTween.value),
+                    child: Text(
+                      widget.cartItemCount,
+                      style: TextStyle(color: _itemCountColorTween.value),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

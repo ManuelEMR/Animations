@@ -16,6 +16,12 @@ class MenuItem {
 
   const MenuItem(
       this.title, this.description, this.rating, this.weigth, this.price);
+
+  bool operator == (o) => o is MenuItem &&
+    o.title == this.title;
+
+  @override
+  int get hashCode => title.hashCode;
 }
 
 class MenuScreen extends StatefulWidget {

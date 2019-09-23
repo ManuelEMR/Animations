@@ -1,4 +1,3 @@
-import 'package:animations/motion_restaurant/main_screen.dart';
 import 'package:animations/motion_restaurant/screens/categories/selection_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class Plate extends StatelessWidget {
 const double kInfoHeight = 100;
 
 class Info extends StatelessWidget {
-  final FoodItem foodItem;
+  final FoodCategoryItem foodItem;
 
   const Info({Key key, @required this.foodItem}) : super(key: key);
 

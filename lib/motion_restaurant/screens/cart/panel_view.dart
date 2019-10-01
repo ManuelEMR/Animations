@@ -18,7 +18,8 @@ class _PanelViewState extends State<PanelView> {
     final defaultTextStyle = TextStyle(fontSize: 15);
     return SlidingUpPanel(
       controller: controller,
-      borderRadius: BorderRadius.circular(40),
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40), topRight: Radius.circular(40)),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       onPanelSlide: _setPanelPosition,
       maxHeight: 340,
@@ -77,6 +78,7 @@ class _PanelViewState extends State<PanelView> {
           ),
           const SizedBox(height: 24),
           Row(
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
                 height: 58,
@@ -105,23 +107,22 @@ class _PanelViewState extends State<PanelView> {
                   ),
                 ),
               ),
+              const SizedBox(width: 16),
               Expanded(
-                child: Container(),
-              ),
-              Container(
-                height: 58,
-                width: 150,
-                child: RaisedButton(
-                  color: mainColor,
-                  onPressed: () => print('Checkout'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Text(
-                    "Checkout",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
+                child: Container(
+                  height: 58,
+                  child: RaisedButton(
+                    color: mainColor,
+                    onPressed: () => print('Checkout'),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),

@@ -17,7 +17,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 30),
+        padding: const EdgeInsets.only(top: 30, bottom: 120),
         itemBuilder: (context, index) {
           if (index == 0) return SectionTitle(title: 'Shopping Cart');
 

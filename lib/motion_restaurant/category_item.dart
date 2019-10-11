@@ -34,7 +34,7 @@ class CategoryItem extends StatelessWidget {
         Positioned(
           left: 5,
           top: centerHeight / 2 - leftHeight / 2,
-          child: Align(alignment: Alignment.center, child: left),
+          child: left,
         )
       ],
     );

@@ -13,6 +13,10 @@ import 'package:flutter/material.dart';
 const double kToggleStepperSize = 113;
 
 class CartScreen extends StatelessWidget {
+  final VoidCallback onCheckoutTap;
+
+  CartScreen({@required this.onCheckoutTap});
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -41,7 +45,7 @@ class CartScreen extends StatelessWidget {
         },
         itemCount: dummyMenuItems.length + 1,
       ),
-      PanelView(),
+      PanelView(onCheckoutTap: onCheckoutTap),
     ]);
   }
 }

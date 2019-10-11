@@ -1,9 +1,15 @@
+import 'package:animations/motion_restaurant/animated_item.dart';
 import 'package:animations/motion_restaurant/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'dart:math';
 
 class PanelView extends StatefulWidget {
+
+  final VoidCallback onCheckoutTap;
+
+  PanelView({@required this.onCheckoutTap});
+
   @override
   _PanelViewState createState() => _PanelViewState();
 }
@@ -100,7 +106,7 @@ class _PanelViewState extends State<PanelView> {
                 child: OutlineButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(29)),
-                  onPressed: () => print('delete'),
+                  onPressed: () => print('bookmark'),
                   child: Icon(
                     Icons.bookmark,
                     color: Colors.grey,
@@ -109,19 +115,21 @@ class _PanelViewState extends State<PanelView> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Container(
-                  height: 58,
-                  child: RaisedButton(
-                    color: mainColor,
-                    onPressed: () => print('Checkout'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Text(
-                      "Checkout",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                child: ScaleTapAnim(
+                  onTapUp: widget.onCheckoutTap,
+                  child: Container(
+                    height: 58,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: mainColor),
+                    child: Center(
+                      child: Text(
+                        "Checkout",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),

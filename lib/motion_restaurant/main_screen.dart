@@ -131,7 +131,13 @@ class _MainScreenState extends State<MainScreen>
           });
         },
       ),
-      CartScreen()
+      CartScreen(onCheckoutTap: () {
+        setState(() {
+            _currentView = 0;
+            _gotoPage(_currentView);
+            _advanceAnim();
+          });
+      },)
     ]);
   }
 }

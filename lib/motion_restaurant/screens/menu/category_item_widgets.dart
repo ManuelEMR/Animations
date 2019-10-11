@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 class PlateInfo extends StatefulWidget {
   final MenuItem menuItem;
 
-  const PlateInfo({Key key, @required this.menuItem})
-      : super(key: key);
+  const PlateInfo({Key key, @required this.menuItem}) : super(key: key);
 
   @override
   _PlateInfoState createState() => _PlateInfoState();
@@ -49,16 +48,20 @@ class _PlateInfoState extends State<PlateInfo>
               sizeFactor: _showAnim,
               child: SizedBox(height: 16),
             ),
-            Text(
-              widget.menuItem.title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Container(
+              height: 42,
+              child: Text(
+                widget.menuItem.title,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
             const SizedBox(height: 12),
             SizeTransition(
               sizeFactor: _showAnim,
               child: FadeTransition(
                 opacity: _showAnim,
-                child: _LargeDescription(description: widget.menuItem.description),
+                child:
+                    _LargeDescription(description: widget.menuItem.description),
               ),
             ),
             SizeTransition(

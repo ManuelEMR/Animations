@@ -8,13 +8,17 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.orange, Colors.pink],
-                  stops: [0.4, 0.8])),
-          child: _Body()),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.orange, Colors.pink],
+                stops: [0.4, 0.8])),
+        child: SafeArea(
+          top: true,
+          child: _Body(),
+        ),
+      ),
     );
   }
 }
@@ -29,34 +33,33 @@ class __BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const SizedBox(height: 40),
-          Image.asset(
-            'assets/cool_login/hk.png',
-            width: 120,
-            height: 120,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        const SizedBox(height: 40),
+        Image.asset(
+          'assets/cool_login/hk.png',
+          width: 120,
+          height: 120,
+        ),
+        Expanded(flex: 1, child: const SizedBox(height: 25)),
+        CoolTab(
+          pageController: _pageController,
+          tabTitles: ['Existing', 'New'],
+        ),
+        Expanded(flex: 1, child: const SizedBox(height: 25)),
+        Expanded(
+          flex: 8,
+          // height: 400,
+          child: PageView(
+            controller: _pageController,
+            children: <Widget>[
+              LoginPage(),
+              SignupPage(),
+            ],
           ),
-          const SizedBox(height: 25),
-          CoolTab(
-            pageController: _pageController,
-            tabTitles: ['Existing', 'New'],
-          ),
-          const SizedBox(height: 25),
-          SizedBox(
-            height: 400,
-            child: PageView(
-              controller: _pageController,
-              children: <Widget>[
-                LoginPage(),
-                SignupPage(),
-              ],
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }
